@@ -1,33 +1,46 @@
 /// This is the ADT in the middle.
 
-/// The syntax below was totally new to me. A good example of how this
-/// is used in Flutter is the Point class. You can check that out as
-/// an example. Also, read the excellent answer to this question on StackExchange
-/// https://stackoverflow.com/questions/50274605/colon-after-constructor-in-dart
+/// The syntax below uses named constructors. If you're not familiar with that
+/// syntax then check out:
+/// https://www.geeksforgeeks.org/constructors-in-dart/ (3-Named Constructors)
 
 class BookRoutePath {
-  final int? id;
-  final bool isUnknown;
+  int? id           = -1;
+  bool isUnknown   = false;
+  bool isSettings  = false;
 
 
   BookRoutePath.home()
-      : id = null,
+      : id        = null,
         isUnknown = false {
-    print( 'Set -> HOME on BookRoutePath\n   id = ' + id.toString() + '\n   isUnknown = ' + isUnknown.toString() + '\n' );
+    print( '''Set -> HOME on BookRoutePath
+    id        = $id
+    isUnknown = $isUnknown''' );
   }
 
   BookRoutePath.details( { this.id } )
       : isUnknown = false {
-    print( 'Set -> DETAILS on BookRoutePath\n   id = ' + id.toString() + '\n   isUnknown = ' + isUnknown.toString() + '\n' );
+    print( '''Set -> DETAILS on BookRoutePath
+    id        = $id
+    isUnknown = $isUnknown''' );
+  }
+
+  BookRoutePath.settings()
+       : id = null,
+        isUnknown = false {
+    print( '''Set -> SETTINGS on BookRoutePath
+    id        = $id
+    isUnknown = $isUnknown''' );
   }
 
   BookRoutePath.unknown()
-      : id = null,
-        isUnknown = true{
-    print( 'Set -> UNKNOWN on BookRoutePath\n   id = ' + id.toString() + '\n   isUnknown = ' + isUnknown.toString() + '\n' );
+      : id        = null,
+        isUnknown = true {
+    print( '''Set -> UNKNOWN on BookRoutePath
+    id        = $id
+    isUnknown = $isUnknown''' );
   }
 
   bool get isHomePage => id == null;
-
   bool get isDetailsPage => id != null;
 }

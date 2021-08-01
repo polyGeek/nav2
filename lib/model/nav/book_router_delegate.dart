@@ -6,6 +6,34 @@ import 'package:flutter_nav_2/pages/book_list_page.dart';
 import 'package:flutter_nav_2/pages/details_page.dart';
 import 'package:flutter_nav_2/pages/unknown_screen.dart';
 
+enum Pages {
+  Splash,
+  Home,
+  Login,
+  CreateAccount,
+  List,
+  Details,
+  Cart,
+  Checkout,
+  Settings
+}
+
+extension PagesEx on Pages {
+  static const path = {
+    Pages.Splash            : '/splash',
+    Pages.Home              : '/home',
+    Pages.Login             : '/login',
+    Pages.CreateAccount     : '/createAccount',
+    Pages.List              : '/list',
+    Pages.Details           : '/Details',
+    Pages.Cart              : '/cart',
+    Pages.Checkout          : '/checkout',
+    Pages.Settings          : '/settings'
+  };
+}
+
+
+
 /// App State -> Navigation State
 class BookRouterDelegate extends RouterDelegate<BookRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<BookRoutePath> {
@@ -29,16 +57,24 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   BookRoutePath get currentConfiguration {
 
     if ( show404 ) {
+
       print( 'BookRouterDelegate.currentConfiguration -> 404' );
       return BookRoutePath.unknown();
+
     }
 
     if( _selectedBook == null ) {
+
       print( 'BookRouterDelegate.currentConfiguration -> NULL' );
       return BookRoutePath.home();
-    } else {
+
+    } else if( _selectedBook?.title != null ) {
+
       print( 'BookRouterDelegate.currentConfiguration -> ' + _selectedBook!.title );
       return BookRoutePath.details( id: books.indexOf( _selectedBook ) );
+
+    } else {
+      return BookRoutePath.unknown();
     }
   }
 
@@ -74,6 +110,8 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
           BookDetailsPage(
               book: _selectedBook
           )
+
+        // add if-else for settings
 
       ],
 
@@ -122,3 +160,7 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
     notifyListeners();
   }
 }
+
+/// Create an enum for all of the different possible app-states.
+/// Don't use the show404. There should be an enum for "selected book".
+/// If the enum is "selected book" then there should be a separate var for the ID of the book.

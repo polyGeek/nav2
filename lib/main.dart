@@ -20,6 +20,7 @@ class _BooksAppState extends State<BooksApp> {
     return MaterialApp.router(
       title: 'Books App',
       routerDelegate: _routerDelegate,
+      debugShowCheckedModeBanner: false,
       routeInformationParser: _routeInformationParser,
     );
   }

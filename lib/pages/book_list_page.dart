@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nav_2/model/nav/book.dart';
+import 'package:flutter_nav_2/pages/home-drawer.dart';
 
 class BooksListScreen extends StatelessWidget {
   final List<Book?> books;
@@ -15,6 +16,7 @@ class BooksListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+      drawer: HomeDrawer(),
       body: ListView(
         children: [
           for (var book in books)

@@ -14,7 +14,7 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
 
     // Handle '/'
     if ( uri.pathSegments.length == 0 ) {
-      print( '  home\n' );
+      print( '  <<<home>>>\n' );
       return BookRoutePath.home();
     }
 
@@ -22,7 +22,7 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
     if ( uri.pathSegments.length == 2 ) {
 
       if ( uri.pathSegments[0] != 'book' ) {
-        print( '  unknown\n' );
+        print( '  <<<unknown>>>\n' );
         return BookRoutePath.unknown();
       }
 
@@ -30,18 +30,23 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
       var remaining = uri.pathSegments[ 1 ];
       var id = int.tryParse( remaining );
       if (id == null) {
-        print( '  unknown\n' );
+        print( '  <<<unknown>>>\n' );
         return BookRoutePath.unknown();
       }
 
       // If we made it to this point then we have a valid URI
       // and can navigate to the selected book.
-      print( '  details\n' );
+      print( '  <<<details>>>\n' );
       return BookRoutePath.details( id: id );
+
+    } else if( uri.pathSegments[0] == 'settings' ) {
+
+      print( '   <<<Settings>>>\n' );
+      return BookRoutePath.settings();
 
     } else {
       // Handle unknown routes
-      print( '  unknown\n' );
+      print( '  <<<unknown>>>\n' );
       return BookRoutePath.unknown();
     }
   }
@@ -51,16 +56,25 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
   RouteInformation? restoreRouteInformation( BookRoutePath path ) {
     print( 'BookRouteInformationParser.restoreRouteInformation: path -> ' + path.toString() );
     if ( path.isUnknown ) {
+
       print( '  isUnknown = true\n' );
       return RouteInformation( location: '/404' );
-    }
-    if ( path.isHomePage ) {
-      print( '  location = /');
+
+    } else  if ( path.isHomePage ) {
+
+      print(  '  location = /' );
       return RouteInformation( location: '/\n' );
-    }
-    if ( path.isDetailsPage ) {
+
+    } else if ( path.isDetailsPage ) {
+
       print( '  isDetailsPage: ' + path.id.toString() + '\n' );
       return RouteInformation( location: '/book/${path.id}' );
+
+    } else if( path.isSettings == true ) {
+
+      print( '  isSettings Page ' );
+      return RouteInformation( location: '/settings' );
+
     }
 
     print( '  return NULL\n' );

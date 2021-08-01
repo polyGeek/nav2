@@ -7,3 +7,11 @@ class Book {
     required this.author
   } );
 }
+
+class BookManager {
+  Book? _selectedBook;
+  Book? get selectedBook => _selectedBook;
+  set selectedBook( Book book ) {
+    _selectedBook = book;
+  }
+}
