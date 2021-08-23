@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nav_2/model/nav/book.dart';
-import 'package:flutter_nav_2/model/nav/book_route_path.dart';
+import 'package:flutter_nav_2/model/nav/route_path.dart';
 import 'package:flutter_nav_2/pages/book_list_page.dart';
 import 'package:flutter_nav_2/pages/details_page.dart';
+import 'package:flutter_nav_2/pages/settings.dart';
 import 'package:flutter_nav_2/pages/unknown_screen.dart';
 
 enum Pages {
@@ -35,14 +36,15 @@ extension PagesEx on Pages {
 
 
 /// App State -> Navigation State
-class BookRouterDelegate extends RouterDelegate<BookRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<BookRoutePath> {
+class NavRouterDelegate extends RouterDelegate<RoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath> {
 
   final GlobalKey<NavigatorState> navigatorKey;
 
   /// Internal State
-  Book? _selectedBook;
-  bool show404 = false;
+  Book?               _selectedBook;
+  bool show404        = false;
+  bool showSettings   = false;
 
   List<Book?> books = [
     Book( title: 'DUNE', author: 'Frank Herbert' ),
@@ -52,29 +54,39 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
     Book( title: "Hitchhiker's Guide To The Galaxy", author: 'Douglas Adams' ),
   ];
 
-  BookRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+  NavRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
-  BookRoutePath get currentConfiguration {
+  /// You can comment this out without error.
+  /// However, the path in the browser URL bar will no longer change.
+  RoutePath get currentConfiguration {
 
     if ( show404 ) {
 
       print( 'BookRouterDelegate.currentConfiguration -> 404' );
-      return BookRoutePath.unknown();
+      return RoutePath.unknown();
 
     }
 
     if( _selectedBook == null ) {
 
-      print( 'BookRouterDelegate.currentConfiguration -> NULL' );
-      return BookRoutePath.home();
+      print( 'c BookRouterDelegate.currentConfiguration -> NULL' );
+      return RoutePath.home();
 
     } else if( _selectedBook?.title != null ) {
 
-      print( 'BookRouterDelegate.currentConfiguration -> ' + _selectedBook!.title );
-      return BookRoutePath.details( id: books.indexOf( _selectedBook ) );
+      print( 'a BookRouterDelegate.currentConfiguration -> ' + _selectedBook!.title);
+      return RoutePath.details( id: books.indexOf( _selectedBook ) );
 
-    } else {
-      return BookRoutePath.unknown();
+    } else if( showSettings == true ) {
+
+      print( 'b BookRouterDelegate.currentConfiguration -> Settings');
+      return RoutePath.settings();
+
+    } else  {
+
+      print( 'd BookRouterDelegate.currentConfiguration -> UNKNOWN' );
+      return RoutePath.unknown();
+
     }
   }
 
@@ -94,6 +106,7 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
           child: BooksListScreen(
             books: books,
             onTapped: _handleBookTapped,
+            onSettings: _handleSettingsTapped,
           ),
         ),
 
@@ -107,11 +120,14 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
           )
 
         else if( _selectedBook != null )
-          BookDetailsPage(
-              book: _selectedBook
-          )
+          BookDetailsPage( book: _selectedBook )
 
-        // add if-else for settings
+         else if( showSettings == true )
+           MaterialPage(
+             key: ValueKey( 'SettingsPage' ),
+               child: PageSettings()
+           )
+
 
       ],
 
@@ -122,7 +138,8 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
 
         // Update the list of pages by setting _selectedBook to null
         _selectedBook = null;
-        show404 = false;
+        show404       = false;
+        showSettings  = false;
         notifyListeners();
 
         return true;
@@ -131,7 +148,7 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   }
 
   @override
-  Future<void> setNewRoutePath( BookRoutePath path ) async {
+  Future<void> setNewRoutePath( RoutePath path ) async {
     if ( path.isUnknown ) {
       _selectedBook = null;
       show404 = true;
@@ -139,15 +156,18 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
     }
 
     if ( path.isDetailsPage ) {
-      if ( path.id! < 0
-          || path.id! > books.length - 1 ) {
-
+      showSettings = false;
+      if (path.id! < 0
+          || path.id! > books.length - 1) {
         show404 = true;
         return;
       }
 
       _selectedBook = books[path.id!];
-
+    } else if( path.isSettings ) {
+      show404       = false;
+      showSettings  = true;
+      return;
     } else {
       _selectedBook = null;
     }
@@ -157,6 +177,11 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
 
   void _handleBookTapped( Book? book ) {
     _selectedBook = book;
+    notifyListeners();
+  }
+
+  void _handleSettingsTapped() {
+    showSettings = true;
     notifyListeners();
   }
 }

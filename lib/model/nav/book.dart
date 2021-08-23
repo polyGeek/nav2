@@ -1,3 +1,4 @@
+
 class Book {
   final String title;
   final String author;
@@ -8,10 +9,18 @@ class Book {
   } );
 }
 
-class BookManager {
+class NavManager {
+
+  static final NavManager _bookManager = NavManager._internal();
+  factory NavManager() => _bookManager;
+  NavManager._internal();
+
+
   Book? _selectedBook;
-  Book get selectedBook => _selectedBook!;
-  set selectedBook( Book book ) {
-    _selectedBook = book;
+
+  Book? getSelectedBook() => _selectedBook;
+
+  set selectedBook( Book newBook ) {
+    _selectedBook = newBook;
   }
 }

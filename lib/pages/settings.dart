@@ -1,22 +1,29 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class PageSettings extends StatelessWidget {
 
   @override
   Widget build( BuildContext context ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Scaffold(
+      appBar: AppBar(
+      				title: Text( 'Settings' ),
+      				centerTitle: true,
+      			),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
 
-      children: [
+        children: [
 
-        SizedBox( height: 20 ),
+          SizedBox( height: 20 ),
 
-        Text( "Settings",
-          textAlign: TextAlign.center,
-        ),
+          Text( "Settings",
+            textAlign: TextAlign.center,
+          ),
 
 
-      ],
+        ],
+      ),
     );
   }
 }

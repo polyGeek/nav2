@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_nav_2/model/nav/book_route_information_parser.dart';
-import 'package:flutter_nav_2/model/nav/book_router_delegate.dart';
+import 'package:flutter_nav_2/model/nav/route_information_parser.dart';
+import 'package:flutter_nav_2/model/nav/router_delegate.dart';
 
 void main() {
-  runApp(BooksApp());
+  runApp( App() );
 }
 
-class BooksApp extends StatefulWidget {
+class App extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _BooksAppState();
+  State<StatefulWidget> createState() => _AppState();
 }
 
-class _BooksAppState extends State<BooksApp> {
-  BookRouterDelegate          _routerDelegate         = BookRouterDelegate();
-  BookRouteInformationParser  _routeInformationParser = BookRouteInformationParser();
+class _AppState extends State<App> {
+  NavRouterDelegate          _navRouterDelegate         = NavRouterDelegate();
+  NavRouteInformationParser  _navRouteInformationParser = NavRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Books App',
-      routerDelegate: _routerDelegate,
+      title: 'Navigation 2.0 Example',
+      routerDelegate: _navRouterDelegate,
       debugShowCheckedModeBanner: false,
-      routeInformationParser: _routeInformationParser,
+      routeInformationParser: _navRouteInformationParser,
     );
   }
 }

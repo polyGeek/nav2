@@ -6,16 +6,28 @@ import 'package:flutter_nav_2/pages/home-drawer.dart';
 class BooksListScreen extends StatelessWidget {
   final List<Book?> books;
   final ValueChanged<Book?> onTapped;
+  final Function onSettings;
 
   BooksListScreen({
     required this.books,
     required this.onTapped,
+    required this.onSettings
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+
+        actions: [
+          IconButton(
+              onPressed: (){
+                onSettings();
+              },
+              icon: Icon( Icons.settings )
+          )
+        ],
+      ),
       drawer: HomeDrawer(),
       body: ListView(
         children: [
